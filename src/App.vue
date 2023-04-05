@@ -1,28 +1,43 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+<h1>Aprendendo VueJS + Firebase</h1>
+
+<label>Tarefa: </label><input type="text" v-model="tarefa"/><br/>
+<label>Autor: </label><input type="text" v-model="autor"/><br/>
+<button @click="cadastrar">Cadastrar</button>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import firebase from './services/firebaseConnection';
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  data(){
+    return{
+      tarefa:'',
+      autor:'',
+    }
+  },
+  methods:{
+    async cadastrar(){
+      await firebase.firestore().collection('posts')
+      .doc('123')
+      .set({
+        tarefa: this.tarefa,
+        autor: this.autor,
+
+      })
+      .then(()=>{
+        console.log('Cadastrado com sucesso');
+      })
+      .catch((error)=>{
+        console.log('Gerou erro' + error)
+      })
+    }
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
+
 </style>
