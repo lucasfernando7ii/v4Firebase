@@ -124,7 +124,7 @@ export default {
       .delete()
       .then(()=>{
         this.idPost = '',
-        console.log('Post Deletado com Sucesso!')
+        console.log('Post Deletado com Sucesso!!')
       })
     }
   }
