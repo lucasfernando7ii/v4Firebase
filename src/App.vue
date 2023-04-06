@@ -1,6 +1,24 @@
 <template>
   <div id="app">
-<h1>Aprendendo VueJS + Firebase</h1>
+
+  <div v-if="!user">
+    <h1>Entrar</h1>
+
+    <label>Email: </label>
+    <input type="text" v-model="email"><br/><br/>
+    <label>Senha: </label>
+    <input type="text" v-model="senha">
+    <br>
+    <br>
+    <button @click="entrar">Entrar</button>
+  </div>
+  <div v-else>
+    <h1>Você esta logado</h1>
+    <h2>Email: {{this.email}}</h2><br/>
+    <button @click="sair">Sair</button>
+
+  </div>
+<hr/>
 
 <label>ID: </label><input type="text" v-model="idPost"/><br/>
 
@@ -38,9 +56,23 @@ export default {
       tarefa:'',
       autor:'',
       posts:[],
+      email:'',
+      senha:'',
+      user: false,
     }
   },
   async created(){
+
+    await firebase.auth().onAuthStateChanged((user)=>{
+      if(user){
+        this.user = true;
+        this.email = user.email
+      }else{
+        this.user = false;
+        this.email = '';
+      }
+    })
+
     await firebase.firestore().collection('posts')
     .onSnapshot((doc)=>{
       this.posts = [];
@@ -123,6 +155,32 @@ export default {
       .delete()
       .then(()=>{
         console.log('Post Deletado com Sucesso!!')
+      })
+    },
+    async cadastrarUsuario(){
+      await firebase.auth().createUserWithEmailAndPassword(this.email, this.senha)
+      .then(()=>{
+        this.email ='';
+        this.senha ='';
+      })
+      .catch((error)=>{
+        if(error.code === 'auth/weak-password'){
+        alert('Senha muito fraca')
+        }else if(error.code ==='auth/email-already-in-use'){
+          alert('Email já existente!')
+        }
+      })
+    },
+    async sair(){
+      await firebase.auth().signOut();
+    },
+    async entrar(){
+      await firebase.auth().signInWithEmailAndPassword(this.email, this.senha)
+      .then((response)=>{
+        console.log(response)
+      })
+      .catch((error)=>{
+        console.log('Erro' + error)
       })
     }
   }
