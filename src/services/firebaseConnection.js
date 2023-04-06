@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import 'firebase/firestore';
 
 
+
 const firebaseConfig = {
     apiKey: "AIzaSyDvFflP5DRuxb-mBkMxsYbTlrILRktq_KI",
     authDomain: "vueapp-4f2ff.firebaseapp.com",

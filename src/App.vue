@@ -19,6 +19,7 @@
   tarefa: {{ post.tarefa }} <br/>
   Autor: {{ post.autor }}
   <br/>
+  <button @click="excluirPost(post.id)">Deletar Post</button>
   <br/>
   </li>
 </ul>
@@ -116,14 +117,11 @@ export default {
         console.log('Erro ao editar: ' + error)
       })
     },
-    async excluirPost(){
+    async excluirPost(id){
 
-      if(this.idPost === '') return;
-
-      await firebase.firestore().collection('posts').doc(this.idPost)
+      await firebase.firestore().collection('posts').doc(id)
       .delete()
       .then(()=>{
-        this.idPost = '',
         console.log('Post Deletado com Sucesso!!')
       })
     }
